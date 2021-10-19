@@ -1,0 +1,6 @@
+JavaPlatformer
+Arrow Keys to move and jump
+
+SpaceInvaders
+Left and Right Arrows to move
+Space Bar to shoot
