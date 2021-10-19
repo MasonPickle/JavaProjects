@@ -1,0 +1,56 @@
+//Example
+//if(SAT(x1, y1, width1, height1, angle1, x2, y2, width2, height2, angle2){
+//  Colliding
+//}
+
+Point2D RotPoint(Point2D point, Point2D pivot, float pointAngle){
+    Point2D result = new Point2D.Double();
+    AffineTransform rotation = new AffineTransform();
+    double angleInRadians = (pointAngle * Math.PI / 180);
+    rotation.rotate(angleInRadians, pivot.getX(), pivot.getY());
+    rotation.transform(point, result);
+    return result;
+}
+boolean SAT(float x, float y, float w, float h, float angleOne, float x2, float y2, float w2,
+            float h2, float angleTwo){
+    boolean result = false;
+
+    Line2D[] objOne = new Line2D[4];
+    Line2D[] objTwo = new Line2D[4];
+    Point2D[] p1 = new Point2D[4];
+    Point2D[] p2 = new Point2D[4];
+
+    p1[0] = new Point2D.Float(x, y);
+    p1[1] = new Point2D.Float(x+w, y);
+    p1[2] = new Point2D.Float(x+w, y+h);
+    p1[3] = new Point2D.Float(x, y+h);
+    for(int i = 0; i < 4; i++){
+        p1[i] = RotPoint(p1[i], new Point2D.Float(x+(w/2), y+(h/2)),angleOne);
+    }
+    p2[0] = new Point2D.Float(x2, y2);
+    p2[1] = new Point2D.Float(x2+w2, y2);
+    p2[2] = new Point2D.Float(x2+w2, y2+h2);
+    p2[3] = new Point2D.Float(x2, y2+h2);
+    for(int i = 0; i < 4; i++){
+        p2[i] = RotPoint(p2[i], new Point2D.Float(x2+(w2/2), y2+(h2/2)),angleTwo);
+    }
+
+    objOne[0] = new Line2D.Float(p1[0],p1[1]);
+    objOne[1] = new Line2D.Float(p1[1],p1[2]);
+    objOne[2] = new Line2D.Float(p1[2],p1[3]);
+    objOne[3] = new Line2D.Float(p1[3],p1[0]);
+
+    objTwo[0] = new Line2D.Float(p2[0],p2[1]);
+    objTwo[1] = new Line2D.Float(p2[1],p2[2]);
+    objTwo[2] = new Line2D.Float(p2[2],p2[3]);
+    objTwo[3] = new Line2D.Float(p2[3],p2[0]);
+
+    for(int o = 0; o < 4; o++){
+        for(int t = 0; t < 4; t++){
+            if(objOne[o].intersectsLine(objTwo[t])){
+                result = true;
+            }
+        }
+    }
+    return result;
+}
